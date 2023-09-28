@@ -18,13 +18,13 @@ class SpotifyClient:
 
     def add_tracks(self, playlist_id: str, track_names: List[str], position: int = 0) -> str:
         track_uris = self._get_track_uris(track_names)
-        logger.info(f"Found {len(track_uris)} track uris to add to the Spotify playlist...")
+        logger.info(f"Found {len(track_uris)} track uris to add to the Spotify playlist")
 
         response = api.request_to_add_tracks(playlist_id, track_uris, position, self._token.header)
         return response["snapshot_id"]
 
     def _get_track_uris(self, track_names: List[str]):
-        logger.info(f"Searching track uris for {len(track_names)} track names")
+        logger.info(f"Starting to search track uris for {len(track_names)} track names...")
 
         track_uris = []
         for track_name in track_names:
