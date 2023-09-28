@@ -5,9 +5,6 @@ class _PlaylistItemSnippet:
     def __init__(self, snippet: dict):
         self._snippet = snippet
 
-    def json(self) -> dict:
-        return self._snippet
-
     @property
     def published_at(self) -> str:
         return self._snippet['publishedAt']
@@ -65,17 +62,6 @@ class _PlaylistItem:
     def __init__(self, item: dict):
         self._item = item
 
-    def json(self) -> dict:
-        return self._item
-
-    @property
-    def kind(self) -> str:
-        return self._item['kind']
-
-    @property
-    def etag(self) -> str:
-        return self._item['etag']
-
     @property
     def id(self) -> str:
         return self._item['id']
@@ -88,17 +74,6 @@ class _PlaylistItem:
 class PlaylistItemsPage:
     def __init__(self, response: dict):
         self._response = response
-
-    def json(self) -> dict:
-        return self._response
-
-    @property
-    def kind(self) -> str:
-        return self._response['kind']
-
-    @property
-    def etag(self) -> str:
-        return self._response['etag']
 
     @property
     def id(self) -> str:

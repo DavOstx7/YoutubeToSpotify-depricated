@@ -7,15 +7,15 @@ from python.core.http import http_request, StatusCodes
 from python.core.api_config import SpotifyAPIConfig
 from python.core.logger import logger
 
-spotify_api = SpotifyAPIConfig()
 MIN_POSITIVE_VALUE = 1
+config = SpotifyAPIConfig()
 
 
-def validate_tracks_uri_size(tracks_uri: List[str]):
-    tracks_uri_size = len(tracks_uri)
-    if not (MIN_POSITIVE_VALUE <= tracks_uri_size <= spotify_api.max_tracks_per_request):
-        valid_range = f"{MIN_POSITIVE_VALUE}-{spotify_api.max_tracks_per_request}"
-        logger.error(f"The size of tracks uri ({tracks_uri_size}) is not in the valid range of {valid_range}")
+def validate_track_uris_size(track_uris: List[str]):
+    track_uris_size = len(track_uris)
+    if not (MIN_POSITIVE_VALUE <= track_uris_size <= config.max_tracks_per_request):
+        valid_range = f"{MIN_POSITIVE_VALUE}-{config.max_tracks_per_request}"
+        logger.error(f"The size of track uris ({track_uris_size}) is not in the valid range of {valid_range}")
         logger.critical("Exiting...")
         exit()
 
@@ -25,7 +25,7 @@ def get_authorization_headers(client_id: str, redirect_uri: str) -> dict:
         "client_id": client_id,
         "response_type": "code",
         "redirect_uri": redirect_uri,
-        "scope": spotify_api.authorization_scopes
+        "scope": config.authorization_scopes
     }
 
 
@@ -50,17 +50,17 @@ def get_request_token_data(code: str, redirect_uri: str) -> dict:
 def request_authorization_token(client_id: str, client_secret: str, code: str, redirect_uri: str):
     headers = get_request_token_headers(client_id, client_secret)
     data = get_request_token_data(code, redirect_uri)
-    return requests.post(spotify_api.toke_url, headers=headers, data=data)
+    return requests.post(config.toke_url, headers=headers, data=data)
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
 def request_user_profile(headers: dict) -> requests.Response:
-    return requests.get(spotify_api.user_profile_url, headers=headers)
+    return requests.get(config.user_profile_url, headers=headers)
 
 
 @http_request(expected_status_codes=[StatusCodes.CREATED])
 def request_to_create_playlist(user_id: str, name: str, description: str, is_public: bool, headers: dict):
-    url = spotify_api.playlists_url(user_id)
+    url = config.playlists_url(user_id)
     headers = {"Content-Type": "application/json", **headers}
     data = {"name": name, "description": description, "public": is_public}
     return requests.post(url, headers=headers, json=data)
@@ -69,25 +69,25 @@ def request_to_create_playlist(user_id: str, name: str, description: str, is_pub
 @http_request(expected_status_codes=[StatusCodes.OK])
 def request_to_search_for_track(name: str, limit: int, headers: dict):
     query_params = {"q": name, "type": "track", "limit": limit}
-    return requests.get(spotify_api.search_url, params=query_params, headers=headers)
+    return requests.get(config.search_url, params=query_params, headers=headers)
 
 
 @http_request(expected_status_codes=[StatusCodes.CREATED])
-def request_to_add_tracks(playlist_id: str, tracks_uri: List[str], position: int, headers: dict):
-    validate_tracks_uri_size(tracks_uri)
-    url = spotify_api.tracks_url(playlist_id)
+def request_to_add_tracks(playlist_id: str, track_uris: List[str], position: int, headers: dict):
+    validate_track_uris_size(track_uris)
+    url = config.tracks_url(playlist_id)
     headers = {"Content-Type": "application/json", **headers}
-    data = {"uris": tracks_uri, "position": position}
+    data = {"uris": track_uris, "position": position}
     return requests.post(url, headers=headers, json=data)
 
 
 def authorize_via_browser(client_id: str, redirect_uri: str):
     headers = get_authorization_headers(client_id, redirect_uri)
     query_params = urllib.parse.urlencode(headers)
-    webbrowser.open(f"{spotify_api.authorization_url}?{query_params}")
+    webbrowser.open(f"{config.authorization_url}?{query_params}")
 
 
-def print_authorization_token(client_id: str, client_secret: str, code: str, redirect_uri: str):
+def get_authorization_token(client_id: str, client_secret: str, code: str, redirect_uri: str) -> str:
     response = request_authorization_token(client_id, client_secret, code, redirect_uri)
     access_token = response["access_token"]
-    print(f"Access Token -> {access_token}")
+    return access_token
