@@ -1,12 +1,12 @@
 from typing import Optional, Iterator, List
-from python.youtube import utils
+from python.youtube import api
 from python.youtube.models import PlaylistItemsPage
 from python.core.logger import logger
 
 
 class YoutubePlaylist:
     def __init__(self, api_key: str, playlist_id: str, max_results: int = 5):
-        self._query_params: dict = utils.get_playlist_query_params(api_key, playlist_id, max_results)
+        self._query_params: dict = api.get_playlist_query_params(api_key, playlist_id, max_results)
         self._last_page: PlaylistItemsPage = None
 
     @property
@@ -32,7 +32,7 @@ class YoutubePlaylist:
         return not self._last_page.next_page_token and self._last_page.prev_page_token
 
     def change_data(self, api_key: str, playlist_id: str, max_results: int = 5):
-        self._query_params = utils.get_playlist_query_params(api_key, playlist_id, max_results)
+        self._query_params = api.get_playlist_query_params(api_key, playlist_id, max_results)
         self._last_page = None
 
     def refresh(self):
@@ -46,7 +46,7 @@ class YoutubePlaylist:
         else:
             logger.debug("Searching for a YouTube playlist page with a token of: ", self._query_params["pageToken"])
 
-        response = utils.request_playlist_page(self._query_params)
+        response = api.request_playlist_page(self._query_params)
         self._last_page = PlaylistItemsPage(response)
         return self._last_page
 
@@ -62,15 +62,16 @@ class YoutubePlaylist:
         self._query_params["pageToken"] = self._last_page.prev_page_token
         return True
 
-    def titles_batch_iterator(self, size: int = 100) -> Iterator[List[str]]:
-        logger.info("Starting to search for YouTube videos title inside the playlist...")
+    def titles_batch_iterator(self, max_batch_size: int = 100) -> Iterator[List[str]]:
+        logger.info("Starting to search for YouTube video titles inside the playlist...")
+
         titles_batch = []
         for page in self:
             for item in page.items:
                 logger.debug(f"Found YouTube video title '{item.snippet.title}'")
-                titles_batch.append(item.snippet.title)
 
-                if len(titles_batch) >= size:
+                titles_batch.append(item.snippet.title)
+                if len(titles_batch) >= max_batch_size:
                     yield titles_batch
                     titles_batch = []
 
