@@ -23,9 +23,6 @@ class YouTubeUserConfig:
     def __init__(self):
         self._config = load_user_config()["youtube"]
 
-    def json(self) -> dict:
-        return self._config
-
     @property
     def api_key(self) -> str:
         return self._config["api_key"]
@@ -38,9 +35,6 @@ class YouTubeUserConfig:
 class SpotifyUserConfig:
     def __init__(self):
         self._config = load_user_config()["spotify"]
-
-    def json(self) -> dict:
-        return self._config
 
     @property
     def access_token(self) -> str:

@@ -14,9 +14,6 @@ class YouTubeAPIConfig:
     def __init__(self):
         self._config = load_config()["youtube"]
 
-    def json(self) -> dict:
-        return self._config
-
     @property
     def playlist_items_url(self) -> str:
         return self._config["urls"]["playlist_items"]
@@ -29,9 +26,6 @@ class YouTubeAPIConfig:
 class SpotifyAPIConfig:
     def __init__(self):
         self._config = load_config()["spotify"]
-
-    def json(self) -> dict:
-        return self._config
 
     @property
     def user_profile_url(self) -> str:

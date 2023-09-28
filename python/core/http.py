@@ -23,7 +23,7 @@ def validate_response(response: requests.Response, expected_status_codes: List[i
         if log_responses:
             logger.debug(f"Received expected response ({response.status_code}) from {request_method} {response.url}")
     else:
-        logger.error(f"Received Unexpected response ({response.status_code}) from {request_method} {request_url}")
+        logger.error(f"Received unexpected response ({response.status_code}) from {request_method} {request_url}")
         logger.critical("Exiting...")
         exit()
 
