@@ -1,4 +1,42 @@
 from typing import List, Optional
+from python.youtube import api
+
+
+class PlaylistQueryParams:
+    def __init__(self, api_key: str, playlist_id: str, max_results: int = 5):
+        self._params = api.get_playlist_query_params(api_key, playlist_id, max_results)
+
+    def dict(self) -> dict:
+        return self._params
+
+    @property
+    def api_key(self) -> str:
+        return self._params["key"]
+
+    @property
+    def part(self) -> str:
+        return self._params["part"]
+
+    @property
+    def playlist_id(self) -> str:
+        return self._params["playlistId"]
+
+    @property
+    def max_results(self) -> int:
+        return self._params["maxResults"]
+
+    @property
+    def page_token(self) -> Optional[str]:
+        return self._params.get("pageToken")
+
+    @page_token.setter
+    def page_token(self, page_token: str):
+        self._params["pageToken"] = page_token
+
+    @page_token.deleter
+    def page_token(self):
+        if "pageToken" in self._params:
+            del self._params["pageToken"]
 
 
 class _PlaylistItemSnippet:

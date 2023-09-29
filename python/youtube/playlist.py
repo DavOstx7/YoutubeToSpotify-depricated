@@ -1,65 +1,64 @@
 from typing import Optional, Iterator, List
 from python.youtube import api
-from python.youtube.models import PlaylistItemsPage
+from python.youtube.models import PlaylistQueryParams, PlaylistItemsPage
 from python.core.logger import logger
 
 
 class YoutubePlaylist:
     def __init__(self, api_key: str, playlist_id: str, max_results: int = 5):
-        self._query_params: dict = api.get_playlist_query_params(api_key, playlist_id, max_results)
-        self._last_page: PlaylistItemsPage = None
+        self._query_params = PlaylistQueryParams(api_key, playlist_id, max_results)
+        self._current_page: PlaylistItemsPage = None
 
     @property
     def is_in_initial_state(self) -> bool:
-        return self._last_page is None
+        return self._current_page is None
 
     @property
     def is_on_first_page(self) -> bool:
         if self.is_in_initial_state:
             return False
-        return self._last_page.next_page_token and not self._last_page.prev_page_token
+        return self._current_page.next_page_token and not self._current_page.prev_page_token
 
     @property
     def is_on_middle_page(self) -> bool:
         if self.is_in_initial_state:
             return False
-        return self._last_page.next_page_token and self._last_page.prev_page_token
+        return self._current_page.next_page_token and self._current_page.prev_page_token
 
     @property
     def is_on_last_page(self) -> bool:
         if self.is_in_initial_state:
             return False
-        return not self._last_page.next_page_token and self._last_page.prev_page_token
+        return not self._current_page.next_page_token and self._current_page.prev_page_token
 
     def change_data(self, api_key: str, playlist_id: str, max_results: int = 5):
-        self._query_params = api.get_playlist_query_params(api_key, playlist_id, max_results)
-        self._last_page = None
+        self._query_params = PlaylistQueryParams(api_key, playlist_id, max_results)
+        self._current_page = None
 
     def refresh(self):
-        if "pageToken" in self._query_params:
-            del self._query_params["pageToken"]
-        self._last_page = None
+        del self._query_params.page_token
+        self._current_page = None
 
     def search_for_page(self) -> Optional[PlaylistItemsPage]:
         if self.is_in_initial_state:
             logger.debug("Searching for the initial YouTube playlist page")
         else:
-            logger.debug(f"Searching for a YouTube playlist page with a token of: {self._query_params['pageToken']}")
+            logger.debug(f"Searching for a YouTube playlist page with a token of: {self._query_params.page_token}")
 
-        response = api.request_playlist_page(self._query_params)
-        self._last_page = PlaylistItemsPage(response)
-        return self._last_page
+        response = api.request_playlist_page(self._query_params.dict())
+        self._current_page = PlaylistItemsPage(response)
+        return self._current_page
 
     def next_page(self) -> bool:
         if self.is_on_last_page:
             return False
-        self._query_params["pageToken"] = self._last_page.next_page_token
+        self._query_params.page_token = self._current_page.next_page_token
         return True
 
     def prev_page(self) -> bool:
         if self.is_on_first_page:
             return False
-        self._query_params["pageToken"] = self._last_page.prev_page_token
+        self._query_params.page_token = self._current_page.prev_page_token
         return True
 
     def titles_batch_iterator(self, max_batch_size: int = 100) -> Iterator[List[str]]:
