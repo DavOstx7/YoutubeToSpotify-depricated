@@ -29,7 +29,7 @@ def server():
     def authorize():
         headers = api.get_authorization_headers(CLIENT_ID, REDIRECT_URI)
         query_params = urllib.parse.urlencode(headers)
-        return flask.redirect(f"{api.config.AUTHORIZATION_URL}?{query_params}")
+        return flask.redirect(f"{api.config.authorization_url}?{query_params}")
 
     @app.route(parsed_redirect_uri.path)
     def access_token():
