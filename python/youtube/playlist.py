@@ -42,9 +42,9 @@ class YoutubePlaylist:
 
     def search_for_page(self) -> Optional[PlaylistItemsPage]:
         if self.is_in_initial_state:
-            logger.debug(f"Searching for the initial YouTube playlist page")
+            logger.debug("Searching for the initial YouTube playlist page")
         else:
-            logger.debug("Searching for a YouTube playlist page with a token of: ", self._query_params["pageToken"])
+            logger.debug(f"Searching for a YouTube playlist page with a token of: {self._query_params['pageToken']}")
 
         response = api.request_playlist_page(self._query_params)
         self._last_page = PlaylistItemsPage(response)
