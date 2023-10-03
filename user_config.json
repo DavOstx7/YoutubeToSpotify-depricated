@@ -1,0 +1,17 @@
+{
+  "logging": {
+    "level": "INFO"
+  },
+  "youtube": {
+    "api_key": "?",
+    "playlist_id": "?"
+  },
+  "spotify": {
+    "access_token": "?",
+    "playlist": {
+      "name": "My Playlist",
+      "description": "My Playlist Description",
+      "public": false
+    }
+  }
+}
