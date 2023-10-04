@@ -36,7 +36,7 @@ class SpotifyAPIConfig:
         return self._config["urls"]["search"]
 
     @property
-    def toke_url(self) -> str:
+    def token_url(self) -> str:
         return self._config["urls"]["token"]
 
     @property

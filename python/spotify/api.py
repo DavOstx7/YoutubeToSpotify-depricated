@@ -20,16 +20,17 @@ def validate_track_uris_size(track_uris: List[str]):
         exit()
 
 
-def get_authorization_headers(client_id: str, redirect_uri: str) -> dict:
-    return {
+def get_authorization_query_params(client_id: str, redirect_uri: str) -> dict:
+    params = {
         "client_id": client_id,
         "response_type": "code",
         "redirect_uri": redirect_uri,
         "scope": config.authorization_scopes
     }
+    return urllib.parse.urlencode(params)
 
 
-def get_request_token_headers(client_id: str, client_secret: str) -> dict:
+def get_request_access_token_headers(client_id: str, client_secret: str) -> dict:
     auth = f"{client_id}:{client_secret}"
     auth_64 = base64.urlsafe_b64encode(auth.encode()).decode()
     return {
@@ -38,7 +39,7 @@ def get_request_token_headers(client_id: str, client_secret: str) -> dict:
     }
 
 
-def get_request_token_data(code: str, redirect_uri: str) -> dict:
+def get_request_access_token_data(code: str, redirect_uri: str) -> dict:
     return {
         "grant_type": "authorization_code",
         "code": code,
@@ -47,10 +48,10 @@ def get_request_token_data(code: str, redirect_uri: str) -> dict:
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
-def request_authorization_token(client_id: str, client_secret: str, code: str, redirect_uri: str):
-    headers = get_request_token_headers(client_id, client_secret)
-    data = get_request_token_data(code, redirect_uri)
-    return requests.post(config.toke_url, headers=headers, data=data)
+def request_access_token(client_id: str, client_secret: str, code: str, redirect_uri: str):
+    headers = get_request_access_token_headers(client_id, client_secret)
+    form_data = get_request_access_token_data(code, redirect_uri)
+    return requests.post(config.token_url, headers=headers, data=form_data)
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
@@ -62,8 +63,8 @@ def request_user_profile(headers: dict) -> requests.Response:
 def request_to_create_playlist(user_id: str, name: str, description: str, is_public: bool, headers: dict):
     url = config.playlists_url(user_id)
     headers = {"Content-Type": "application/json", **headers}
-    data = {"name": name, "description": description, "public": is_public}
-    return requests.post(url, headers=headers, json=data)
+    json_body = {"name": name, "description": description, "public": is_public}
+    return requests.post(url, headers=headers, json=json_body)
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
@@ -77,17 +78,16 @@ def request_to_add_tracks(playlist_id: str, track_uris: List[str], position: int
     validate_track_uris_size(track_uris)
     url = config.tracks_url(playlist_id)
     headers = {"Content-Type": "application/json", **headers}
-    data = {"uris": track_uris, "position": position}
-    return requests.post(url, headers=headers, json=data)
+    json_body = {"uris": track_uris, "position": position}
+    return requests.post(url, headers=headers, json=json_body)
 
 
 def authorize_via_browser(client_id: str, redirect_uri: str):
-    headers = get_authorization_headers(client_id, redirect_uri)
-    query_params = urllib.parse.urlencode(headers)
+    query_params = get_authorization_query_params(client_id, redirect_uri)
     webbrowser.open(f"{config.authorization_url}?{query_params}")
 
 
-def get_authorization_token(client_id: str, client_secret: str, code: str, redirect_uri: str) -> str:
-    response = request_authorization_token(client_id, client_secret, code, redirect_uri)
+def get_access_token(client_id: str, client_secret: str, code: str, redirect_uri: str) -> str:
+    response = request_access_token(client_id, client_secret, code, redirect_uri)
     access_token = response["access_token"]
     return access_token

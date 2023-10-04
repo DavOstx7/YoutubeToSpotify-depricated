@@ -1,4 +1,4 @@
-from typing import Optional, Iterator, List
+from typing import Optional, Generator, List
 from python.youtube import api
 from python.youtube.models import PlaylistQueryParams, PlaylistItemsPage
 from python.core.logger import logger
@@ -61,15 +61,15 @@ class YoutubePlaylist:
         self._query_params.page_token = self._current_page.prev_page_token
         return True
 
-    def titles_batch_iterator(self, max_batch_size: int = 100) -> Iterator[List[str]]:
+    def titles_batch_generator(self, max_batch_size: int = 100) -> Generator[List[str], None, None]:
         logger.info("Starting to search for YouTube video titles inside the playlist...")
 
         titles_batch = []
         for page in self:
             for item in page.items:
                 logger.debug(f"Found YouTube video title '{item.snippet.title}'")
-
                 titles_batch.append(item.snippet.title)
+
                 if len(titles_batch) >= max_batch_size:
                     yield titles_batch
                     titles_batch = []
