@@ -11,7 +11,8 @@
     "playlist": {
       "name": "My Playlist",
       "description": "My Playlist Description",
-      "public": false
+      "public": false,
+      "existing_id": "?"
     }
   }
 }

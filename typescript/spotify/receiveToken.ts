@@ -1,22 +1,19 @@
+import tokenConfig from '../../spotify_token_config.json';
 import express from 'express';
-import api, {config} from './api';
-
-const CLIENT_ID = "?";
-const CLIENT_SECRET = "?";
-const REDIRECT_URI = "?";
+import api, {config as apiConfig} from './api';
 
 function server() {
-    const parsedRedirectUri = new URL(REDIRECT_URI);
+    const parsedRedirectUri = new URL(tokenConfig.redirect_uri);
     const app = express();
     
     app.get('/', (req, res) => {
-        const queryParams = api.getAuthorizationQueryParams(CLIENT_ID, REDIRECT_URI);
-        return res.redirect(`${config.urls.authorization}?${queryParams}`);
+        const queryParams = api.getAuthorizationQueryParams(tokenConfig.client_id, tokenConfig.redirect_uri);
+        return res.redirect(`${apiConfig.urls.authorization}?${queryParams}`);
     })
 
     app.get(parsedRedirectUri.pathname, async (req, res) => {
         const code = req.query.code as string;
-        const response = await api.requestAccessToken(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URI);
+        const response = await api.requestAccessToken(tokenConfig.client_id, tokenConfig.client_secret, code, tokenConfig.redirect_uri);
         res.send({"access_token": response.access_token});
     })
 

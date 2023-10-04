@@ -4,6 +4,8 @@ import os.path
 SCRIPT_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(SCRIPT_DIR, "../..", "user_config.json")
 
+UNSET_CONFIG_VALUE = "?"
+
 
 def load_user_config() -> dict:
     with open(CONFIG_FILE, 'r') as config_file:
@@ -51,3 +53,11 @@ class SpotifyUserConfig:
     @property
     def is_public_playlist(self) -> bool:
         return self._config["playlist"]["public"]
+
+    @property
+    def existing_playlist_id(self) -> str:
+        return self._config["playlist"]["existing_id"]
+
+    @property
+    def is_existing_playlist_id_set(self) -> bool:
+        return self.existing_playlist_id != UNSET_CONFIG_VALUE
