@@ -17,7 +17,7 @@ def manual():
     # step 2: run the function below, only after you have set the code variable with the value from step 1.
     # p.s do not forget to comment out the function from step 1.
 
-    # print("Access Token: ", api.get_authorization_token(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URI))
+    # print("access token -> ", api.get_access_token(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URI))
 
 
 def server():
@@ -27,14 +27,13 @@ def server():
 
     @app.route("/")
     def authorize():
-        headers = api.get_authorization_headers(CLIENT_ID, REDIRECT_URI)
-        query_params = urllib.parse.urlencode(headers)
+        query_params = api.get_authorization_query_params(CLIENT_ID, REDIRECT_URI)
         return flask.redirect(f"{api.config.authorization_url}?{query_params}")
 
     @app.route(parsed_redirect_uri.path)
     def access_token():
         code = flask.request.args.get("code")
-        response = api.request_authorization_token(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URI)
+        response = api.request_access_token(CLIENT_ID, CLIENT_SECRET, code, REDIRECT_URI)
         return {"access_token": response["access_token"]}
 
     app.run(host=parsed_redirect_uri.hostname, port=parsed_redirect_uri.port)

@@ -1,6 +1,7 @@
 import time
 import requests
 import functools
+from python.core.exception import ResponseError
 from python.core.logger import logger
 from typing import List, Callable
 
@@ -18,14 +19,13 @@ class StatusCodes:
 
 
 def validate_response(response: requests.Response, expected_status_codes: List[int], log_responses: bool = False):
-    request_url, request_method = response.request.url, response.request.method
+    request_endpoint = f"{response.request.method} {response.request.url}"
     if response.status_code in expected_status_codes:
         if log_responses:
-            logger.debug(f"Received expected response ({response.status_code}) from {request_method} {response.url}")
+            logger.debug(f"Received expected response ({response.status_code}) from {request_endpoint}")
     else:
-        logger.error(f"Received unexpected response ({response.status_code}) from {request_method} {request_url}")
-        logger.critical("Exiting...")
-        exit()
+        msg = f"Received unexpected response ({response.status_code}) from {request_endpoint}\n{response.text}"
+        raise ResponseError(msg)
 
 
 def http_request(expected_status_codes: List[int], wait_time: float = 0.2, log_responses: bool = False):

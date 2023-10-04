@@ -21,9 +21,10 @@ def main():
         spotify_config.playlist_name, spotify_config.playlist_description, spotify_config.is_public_playlist
     )
 
-    for titles_batch in youtube_playlist.titles_batch_iterator(max_batch_size=100):
+    for titles_batch in youtube_playlist.titles_batch_generator(max_batch_size=50):
         snapshot_id = spotify_client.add_tracks(playlist_id, titles_batch)
-        logger.debug(f"Spotify snapshot id of the new added tracks is {snapshot_id}")
+        if snapshot_id:
+            logger.debug(f"Spotify snapshot id of the new added tracks is {snapshot_id}")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,7 @@ from typing import Optional, List
 from python.spotify import api
 
 
-class Token:
+class AccessToken:
     def __init__(self, access_token: str):
         self._access_token = access_token
 
