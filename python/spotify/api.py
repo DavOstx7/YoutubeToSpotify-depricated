@@ -5,7 +5,7 @@ import urllib.parse
 from typing import List
 from python.core.http import http_request, StatusCodes
 from python.core.api_config import SpotifyAPIConfig
-from python.core.logger import logger
+from python.core.exception import ValidationError
 
 MIN_POSITIVE_VALUE = 1
 config = SpotifyAPIConfig()
@@ -15,9 +15,7 @@ def validate_track_uris_size(track_uris: List[str]):
     track_uris_size = len(track_uris)
     if not (MIN_POSITIVE_VALUE <= track_uris_size <= config.max_tracks_per_request):
         valid_range = f"{MIN_POSITIVE_VALUE}-{config.max_tracks_per_request}"
-        logger.error(f"The size of track uris ({track_uris_size}) is not in the valid range of {valid_range}")
-        logger.critical("Exiting...")
-        exit()
+        raise ValidationError(f"The size of track uris ({track_uris_size}) is not in the valid range of {valid_range}")
 
 
 def get_authorization_query_params(client_id: str, redirect_uri: str) -> dict:
