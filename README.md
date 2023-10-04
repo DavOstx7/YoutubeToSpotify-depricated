@@ -21,7 +21,8 @@ Convert your favorite YouTube playlist to a Spotify playlist!
 
 * <span style="color:#1db954">Spotify Access Token</span> (**Lasts 1 Hour**) - Choose either of two methods below
     1. Follow the steps in the documentation [Spotify Access Token][SpotifyTokenLink]
-    2. Follow the steps in one of the scripts to receive the token
+    2. Fill in the values inside the [spotify_token_config.json](spotify_token_config.json) file, then run one of the
+       following scripts
         1. [python/spotify/receive_token.py](python/spotify/receive_token.py)
         2. [typescript/spotify/receiveToken.ts](typescript/spotify/receiveToken.ts)
 
@@ -33,7 +34,7 @@ Convert your favorite YouTube playlist to a Spotify playlist!
 ## Running Some Code
 
 1. Fill in the values inside the [user_config.json](./user_config.json) file
-2. Run the code in your preferred programming language
+2. Run the code with your preferred programming language
     1. **Python 3^6** - [main.py](python/main.py)
     2. **TypeScript** - [main.ts](typescript/main.ts)
 
