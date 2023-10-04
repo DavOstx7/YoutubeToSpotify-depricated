@@ -14,7 +14,7 @@ async function main() {
     const youtubePlaylist = new YouTubePlaylist(youtubeConfig.api_key, youtubeConfig.playlist_id);
     const spotifyClient = await new SpotifyClient(spotifyConfig.access_token).setUserId();
 
-    // In order to add to an existing playlist, set the playlist id variable instead of calling 'create_playlist' method
+    // In order to add to an existing playlist, set the playlist id variable instead of calling 'createPlaylist' method
     // const playlistId = "?";
 
     const playlistId = await spotifyClient.createPlaylist(
