@@ -1,0 +1,14 @@
+# PyCharm
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
+
+# TypeScript
+node_modules/
+package.json
+package-lock.json
