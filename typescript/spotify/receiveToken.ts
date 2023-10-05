@@ -1,6 +1,8 @@
-import tokenConfig from '../../spotify_token_config.json';
+import receiveTokenConfig from '../../receive_token_config.json';
 import express from 'express';
 import api, {config as apiConfig} from './api';
+
+const tokenConfig = receiveTokenConfig.spotify;
 
 function server() {
     const parsedRedirectUri = new URL(tokenConfig.redirect_uri);
