@@ -1,6 +1,6 @@
 import requests
 from python.core.http import http_request, StatusCodes
-from python.core.api_config import YouTubeAPIConfig
+from python.config.api import YouTubeAPIConfig
 from python.core.exception import ValidationError
 
 MIN_POSITIVE_VALUE = 1

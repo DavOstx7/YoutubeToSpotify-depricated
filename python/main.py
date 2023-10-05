@@ -1,7 +1,7 @@
 from python.core.logger import logger
 from python.youtube.playlist import YoutubePlaylist
 from python.spotify.client import SpotifyClient
-from python.core.user_config import YouTubeUserConfig, SpotifyUserConfig, LoggingUserConfig
+from python.config.user import YouTubeUserConfig, SpotifyUserConfig, LoggingUserConfig
 
 logging_config = LoggingUserConfig()
 youtube_config = YouTubeUserConfig()
