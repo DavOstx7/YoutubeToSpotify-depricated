@@ -36,7 +36,7 @@ async function main() {
 
     const playlistId = await getSpotifyPlaylistId(spotifyClient);
 
-    for await (let titlesBatch of youtubePlaylist.titlesBatchGenerator(50)) {
+    for await (const titlesBatch of youtubePlaylist.titlesBatchGenerator(50)) {
         const snapshotId = await spotifyClient.addTracks(playlistId, titlesBatch);
         if (snapshotId) {
             logger.debug(`Spotify snapshot id of the new added tracks is ${snapshotId}`);
