@@ -20,7 +20,7 @@ class SpotifyClient:
         track_uris = self._get_track_uris(track_names)
 
         if track_uris:
-            logger.info(f"Found {len(track_uris)} track uris to add to the Spotify playlist")
+            logger.info(f"Adding {len(track_uris)} track uris to the Spotify playlist")
             response = api.request_to_add_tracks(playlist_id, track_uris, position, self._token.header)
             return response["snapshot_id"]
 
