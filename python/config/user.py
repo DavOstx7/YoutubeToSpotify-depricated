@@ -1,5 +1,5 @@
-import json
 import os.path
+from python.config.base import BaseJSONConfig
 
 SCRIPT_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(SCRIPT_DIR, "../..", "user_config.json")
@@ -7,23 +7,18 @@ CONFIG_FILE = os.path.join(SCRIPT_DIR, "../..", "user_config.json")
 UNSET_CONFIG_VALUE = "?"
 
 
-def load_user_config() -> dict:
-    with open(CONFIG_FILE, 'r') as config_file:
-        return json.load(config_file)
-
-
-class LoggingUserConfig:
+class LoggingUserConfig(BaseJSONConfig):
     def __init__(self):
-        self._config = load_user_config()["logging"]
+        super().__init__(CONFIG_FILE, "logging")
 
     @property
     def level(self) -> str:
         return self._config["level"]
 
 
-class YouTubeUserConfig:
+class YouTubeUserConfig(BaseJSONConfig):
     def __init__(self):
-        self._config = load_user_config()["youtube"]
+        super().__init__(CONFIG_FILE, "youtube")
 
     @property
     def api_key(self) -> str:
@@ -34,9 +29,9 @@ class YouTubeUserConfig:
         return self._config["playlist_id"]
 
 
-class SpotifyUserConfig:
+class SpotifyUserConfig(BaseJSONConfig):
     def __init__(self):
-        self._config = load_user_config()["spotify"]
+        super().__init__(CONFIG_FILE, "spotify")
 
     @property
     def access_token(self) -> str:

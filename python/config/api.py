@@ -1,18 +1,13 @@
-import json
 import os.path
+from python.config.base import BaseJSONConfig
 
 SCRIPT_DIR = os.path.dirname(__file__)
 CONFIG_FILE = os.path.join(SCRIPT_DIR, "../..", "api_config.json")
 
 
-def load_config() -> dict:
-    with open(CONFIG_FILE, 'r') as config_file:
-        return json.load(config_file)
-
-
-class YouTubeAPIConfig:
+class YouTubeAPIConfig(BaseJSONConfig):
     def __init__(self):
-        self._config = load_config()["youtube"]
+        super().__init__(CONFIG_FILE, "youtube")
 
     @property
     def playlist_items_url(self) -> str:
@@ -23,9 +18,9 @@ class YouTubeAPIConfig:
         return self._config["max_items_per_request"]
 
 
-class SpotifyAPIConfig:
+class SpotifyAPIConfig(BaseJSONConfig):
     def __init__(self):
-        self._config = load_config()["spotify"]
+        super().__init__(CONFIG_FILE, "spotify")
 
     @property
     def user_profile_url(self) -> str:

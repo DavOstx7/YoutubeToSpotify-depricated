@@ -1,9 +1,9 @@
 import flask
 import urllib.parse
 from python.spotify import api
-from python.core.token_config import SpotifyTokenConfig
+from python.config.receive_token import SpotifyReceiveTokenConfig
 
-config = SpotifyTokenConfig()
+config = SpotifyReceiveTokenConfig()
 
 
 def manual():

@@ -4,7 +4,7 @@ import webbrowser
 import urllib.parse
 from typing import List
 from python.core.http import http_request, StatusCodes
-from python.core.api_config import SpotifyAPIConfig
+from python.config.api import SpotifyAPIConfig
 from python.core.exception import ValidationError
 
 MIN_POSITIVE_VALUE = 1
