@@ -37,7 +37,7 @@ export class SpotifyClient {
             return undefined;
         }
 
-        logger.info(`Found ${trackUris.length} track uris to add to the Spotify playlist`);
+        logger.info(`Adding ${trackUris.length} track uris to the Spotify playlist`);
         const response = await api.requestToAddTracks(playlistId, trackUris, position, this.authorizationHeader);
         return response.snapshot_id;
 
