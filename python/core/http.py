@@ -1,7 +1,7 @@
 import httpx
 import functools
 from typing import List, Callable, Awaitable
-from python.core.exception import ResponseError
+from python.core.exceptions import ResponseError
 from python.core.logger import logger
 
 try:
