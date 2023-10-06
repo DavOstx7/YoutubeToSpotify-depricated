@@ -1,4 +1,4 @@
-from typing import Optional, Awaitable
+from typing import Optional
 from python.spotify import api
 
 

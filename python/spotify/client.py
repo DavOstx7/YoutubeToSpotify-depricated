@@ -1,4 +1,4 @@
-from typing import List, Optional, Awaitable
+from typing import List, Optional
 from python.spotify import api
 from python.spotify.models import AccessToken, Track, UserProfile
 from python.core.logger import logger
