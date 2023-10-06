@@ -27,7 +27,7 @@ export class YouTubeAPIRequests {
     private validateMaxResultsValue(maxResults: number) {
         if (! this.isValidMaxResultsValue(maxResults)) {
             const validRange = `${MIN_POSITIVE_VALUE}-${config.max_items_per_request}`;
-            throw new ValidationError(`The value of max results is not in the valid range of ${validRange}`);
+            throw new ValidationError(`The value of max results (${maxResults}) is not in the valid range of ${validRange}`);
         }
     }
 }

@@ -1,4 +1,4 @@
-from typing import List, Optional, Awaitable, AsyncGenerator
+from typing import List, Optional, AsyncGenerator
 from python.youtube import api
 from python.youtube.models import PlaylistQueryParams, PlaylistItemsPage
 from python.core.logger import logger
@@ -41,9 +41,9 @@ class YoutubePlaylist:
 
     async def search_for_page(self) -> PlaylistItemsPage:
         if self.is_in_initial_state:
-            logger.debug("Searching for the initial YouTube playlist page")
+            logger.debug("Searching for initial YouTube playlist page")
         else:
-            logger.debug(f"Searching for a YouTube playlist page with a token of: {self._query_params.page_token}")
+            logger.debug(f"Searching for YouTube playlist page with token '{self._query_params.page_token}'")
 
         response = await api.request_playlist_page(self._query_params.dict())
         self._current_page = PlaylistItemsPage(response)

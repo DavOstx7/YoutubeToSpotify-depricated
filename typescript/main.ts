@@ -17,14 +17,14 @@ async function getSpotifyPlaylistId(spotifyClient: SpotifyClient): Promise<strin
 
     if (isConfigValueSet(spotifyConfig.existing_playlist.id)) {
         playlistId = spotifyConfig.existing_playlist.id;
-        logger.info(`Using the pre-existing Spotify playlist id ${playlistId}`);
+        logger.info(`Using the pre-existing Spotify playlist id '${playlistId}'`);
     } else {
         playlistId = await spotifyClient.createPlaylist(
             spotifyConfig.new_playlist.name, 
             spotifyConfig.new_playlist.description, 
             spotifyConfig.new_playlist.public
         );
-        logger.info(`Using the newly-created Spotify playlist id ${playlistId}`)
+        logger.info(`Using the newly-created Spotify playlist id '${playlistId}'`)
     }
 
     return playlistId;
@@ -41,7 +41,7 @@ async function main() {
     for await (const titlesBatch of youtubePlaylist.titlesBatchGenerator(50)) {
         const snapshotId = await spotifyClient.addTracks(playlistId, titlesBatch);
         if (snapshotId) {
-            logger.debug(`Spotify snapshot id of the new added tracks is ${snapshotId}`);
+            logger.debug(`Spotify snapshot id of the new added tracks is '${snapshotId}'`);
         }
     }
 }

@@ -16,7 +16,7 @@ class SpotifyClient:
 
     async def create_playlist(self, name: str, description: str, is_public: bool) -> str:
         _playlist_type = "public" if is_public else "private"
-        logger.info(f"Creating a new {_playlist_type} Spotify playlist with the name of '{name}'")
+        logger.info(f"Creating a new {_playlist_type} Spotify playlist '{name}'")
 
         response = await api.request_to_create_playlist(self._user.id, name, description, is_public, self._token.header)
         return response["id"]
@@ -39,7 +39,7 @@ class SpotifyClient:
             track_uri = await Track(track_name).search_for_uri(self._token.header)
 
             if track_uri:
-                logger.debug(f"Found a Spotify track uri of {track_uri} for '{track_name}'")
+                logger.debug(f"Found Spotify track uri '{track_uri}' for '{track_name}'")
                 track_uris.append(track_uri)
             else:
                 logger.warning(f"Failed to find a Spotify track uri for '{track_name}'")
