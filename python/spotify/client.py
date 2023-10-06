@@ -1,4 +1,4 @@
-from typing import List, Optional, Awaitable
+from typing import List, Optional
 from python.spotify import api
 from python.spotify.models import AccessToken, Track, UserProfile
 from python.core.logger import logger
@@ -9,7 +9,7 @@ class SpotifyClient:
         self._token = AccessToken(access_token)
         self._user: Optional[UserProfile] = None
 
-    async def set_profile(self) -> 'SpotifyClient':
+    async def set_user_profile(self) -> 'SpotifyClient':
         response = await api.request_user_profile(self._token.header)
         self._user = UserProfile(response)
         return self
