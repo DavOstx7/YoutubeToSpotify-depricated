@@ -27,7 +27,7 @@ async def main():
     logger.setLevel(logging_config.level)
 
     youtube_playlist = YoutubePlaylist(youtube_config.api_key, youtube_config.playlist_id)
-    spotify_client = await SpotifyClient(spotify_config.access_token).set_profile()
+    spotify_client = await SpotifyClient(spotify_config.access_token).set_user_profile()
 
     playlist_id = await get_spotify_playlist_id(spotify_client)
 
