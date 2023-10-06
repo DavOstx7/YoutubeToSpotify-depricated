@@ -35,7 +35,7 @@ Convert your favorite YouTube playlist to a Spotify playlist!
 
 1. Fill in the values inside the [user_config.json](./user_config.json) file
 2. Run the code with your preferred programming language
-    1. **Python 3^6** - [main.py](python/main.py)
+    1. **Python 3^7** - [main.py](python/main.py)
     2. **TypeScript** - [main.ts](typescript/main.ts)
 
 [YouTubeAPILink]:https://developers.google.com/youtube/v3/getting-started

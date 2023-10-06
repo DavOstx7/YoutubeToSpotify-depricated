@@ -1,4 +1,4 @@
-from typing import Optional, Generator, List
+from typing import List, Optional, Awaitable, AsyncGenerator
 from python.youtube import api
 from python.youtube.models import PlaylistQueryParams, PlaylistItemsPage
 from python.core.logger import logger
@@ -7,7 +7,7 @@ from python.core.logger import logger
 class YoutubePlaylist:
     def __init__(self, api_key: str, playlist_id: str, max_results: int = 5):
         self._query_params = PlaylistQueryParams(api_key, playlist_id, max_results)
-        self._current_page: PlaylistItemsPage = None
+        self._current_page: Optional[PlaylistItemsPage] = None
 
     @property
     def is_in_initial_state(self) -> bool:
@@ -39,13 +39,13 @@ class YoutubePlaylist:
         del self._query_params.page_token
         self._current_page = None
 
-    def search_for_page(self) -> Optional[PlaylistItemsPage]:
+    async def search_for_page(self) -> PlaylistItemsPage:
         if self.is_in_initial_state:
             logger.debug("Searching for the initial YouTube playlist page")
         else:
             logger.debug(f"Searching for a YouTube playlist page with a token of: {self._query_params.page_token}")
 
-        response = api.request_playlist_page(self._query_params.dict())
+        response = await api.request_playlist_page(self._query_params.dict())
         self._current_page = PlaylistItemsPage(response)
         return self._current_page
 
@@ -61,11 +61,11 @@ class YoutubePlaylist:
         self._query_params.page_token = self._current_page.prev_page_token
         return True
 
-    def titles_batch_generator(self, max_batch_size: int = 100) -> Generator[List[str], None, None]:
+    async def titles_batch_generator(self, max_batch_size: int = 100) -> AsyncGenerator[List[str], None]:
         logger.info("Starting to search for YouTube video titles inside the playlist...")
 
         titles_batch = []
-        for page in self:
+        async for page in self.page_generator():
             for item in page.items:
                 logger.debug(f"Found YouTube video title '{item.snippet.title}'")
                 titles_batch.append(item.snippet.title)
@@ -77,12 +77,7 @@ class YoutubePlaylist:
         if titles_batch:
             yield titles_batch
 
-    def __iter__(self) -> 'YoutubePlaylist':
-        return self
-
-    def __next__(self) -> PlaylistItemsPage:
-        if self.is_on_last_page:
-            raise StopIteration
-        page = self.search_for_page()
-        self.next_page()
-        return page
+    async def page_generator(self) -> AsyncGenerator[PlaylistItemsPage, None]:
+        while not self.is_on_last_page:
+            yield await self.search_for_page()
+            self.next_page()

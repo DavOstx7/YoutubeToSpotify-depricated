@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, Awaitable
 from python.spotify import api
 
 
@@ -17,8 +17,8 @@ class Track:
     def __init__(self, name: str):
         self.name = name
 
-    def search_for_uri(self, headers: dict) -> Optional[str]:
-        response = api.request_to_search_for_track(self.name, limit=1, headers=headers)
+    async def search_for_uri(self, headers: dict) -> Optional[str]:
+        response = await api.request_to_search_for_track(self.name, limit=1, headers=headers)
 
         if "tracks" in response:
             items: list = response["tracks"]["items"]
