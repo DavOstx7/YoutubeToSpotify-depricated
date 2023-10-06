@@ -93,14 +93,15 @@ export class SpotifyAPIRequests {
     }
 
     private validateTrackUrisSize(trackUris: string[]) {
-        if (! this.isValidTrackUrisSize(trackUris)) {
+        const trackUrisSize = trackUris.length;
+        if (! this.isValidTrackUrisSize(trackUrisSize)) {
             const validRange = `${MIN_POSITIVE_VALUE}-${config.max_tracks_per_request}`;
-            throw new ValidationError(`The size of track uris is not in the valid range of ${validRange}`)
+            throw new ValidationError(`The size of track uris (${trackUrisSize}) is not in the valid range of ${validRange}`)
         }
     }
 
-    private isValidTrackUrisSize(trackUris: string[]) {
-        return trackUris.length >=MIN_POSITIVE_VALUE && trackUris.length <= config.max_tracks_per_request;
+    private isValidTrackUrisSize(trackUrisSize: number) {
+        return trackUrisSize >=MIN_POSITIVE_VALUE && trackUrisSize <= config.max_tracks_per_request;
     }
 }
 
