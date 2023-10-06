@@ -51,9 +51,9 @@ export class YouTubePlaylist {
 
     public async searchForPage(): Promise<PlaylistItemsPage> {
         if (this.isInInitialState) {
-            logger.debug("Searching for the initial YouTube playlist page");
+            logger.debug("Searching for initial YouTube playlist page");
         } else {
-            logger.debug(`Searching for a YouTube playlist page with a token of: ${this.queryParams.pageToken}`);
+            logger.debug(`Searching for YouTube playlist page with token '${this.queryParams.pageToken}'`);
         }
 
         this.currentPage = await api.requestPlaylistPage(this.queryParams);

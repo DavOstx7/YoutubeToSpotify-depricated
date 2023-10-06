@@ -23,7 +23,7 @@ export class SpotifyClient {
 
     public async createPlaylist(name: string, description: string, isPublic: boolean): Promise<string> {
         const _playlistType = isPublic ? "public" : "private";
-        logger.info(`Creating a new ${_playlistType} Spotify playlist with the name of '${name}'`);
+        logger.info(`Creating a new ${_playlistType} Spotify playlist '${name}'`);
 
         const response = await api.requestToCreatePlaylist(this.userId, name, description, isPublic, this.authorizationHeader);
         return response.id;
@@ -51,7 +51,7 @@ export class SpotifyClient {
             const trackUri = await this.searchForTrackUri(trackName);
 
             if (trackUri) {
-                logger.debug(`Found a Spotify track uri of ${trackUri} for '${trackName}'`);
+                logger.debug(`Found Spotify track uri '${trackUri}' for '${trackName}'`);
                 trackUris.push(trackUri);
             } else {
                 logger.warning(`Failed to find a Spotify track uri for '${trackName}'`);
