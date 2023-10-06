@@ -1,7 +1,7 @@
 import httpx
 from python.core.http import http_request, StatusCodes
 from python.config.api import YouTubeAPIConfig
-from python.core.exception import ValidationError
+from python.core.exceptions import ValidationError
 
 MIN_POSITIVE_VALUE = 1
 client = httpx.AsyncClient()
