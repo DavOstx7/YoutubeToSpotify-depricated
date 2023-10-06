@@ -38,21 +38,20 @@ class SpotifyUserConfig(BaseJSONConfig):
         return self._config["access_token"]
 
     @property
-    def playlist_name(self) -> str:
-        return self._config["playlist"]["name"]
+    def new_playlist_name(self) -> str:
+        return self._config["new_playlist"]["name"]
 
     @property
-    def playlist_description(self) -> str:
-        return self._config["playlist"]["description"]
+    def new_playlist_description(self) -> str:
+        return self._config["new_playlist"]["description"]
 
     @property
-    def is_public_playlist(self) -> bool:
-        return self._config["playlist"]["public"]
+    def is_new_playlist_public(self) -> bool:
+        return self._config["new_playlist"]["public"]
 
     @property
     def existing_playlist_id(self) -> str:
-        return self._config["playlist"]["existing_id"]
+        return self._config["existing_playlist"]["id"]
 
-    @property
     def is_existing_playlist_id_set(self) -> bool:
         return self.existing_playlist_id != UNSET_CONFIG_VALUE
