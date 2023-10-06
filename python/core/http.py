@@ -1,9 +1,8 @@
-import time
-import requests
+import httpx
 import functools
+from typing import List, Callable, Awaitable
 from python.core.exception import ResponseError
 from python.core.logger import logger
-from typing import List, Callable
 
 try:
     from typing import ParamSpec
@@ -18,7 +17,7 @@ class StatusCodes:
     CREATED = 201
 
 
-def validate_response(response: requests.Response, expected_status_codes: List[int], log_responses: bool = False):
+def validate_response(response: httpx.Response, expected_status_codes: List[int], log_responses: bool = False):
     request_endpoint = f"{response.request.method} {response.request.url}"
     if response.status_code in expected_status_codes:
         if log_responses:
@@ -28,14 +27,12 @@ def validate_response(response: requests.Response, expected_status_codes: List[i
         raise ResponseError(msg)
 
 
-def http_request(expected_status_codes: List[int], wait_time: float = 0.2, log_responses: bool = False):
-    def decorator(func: Callable[[P], requests.Response]) -> Callable[[P], dict]:
+def http_request(expected_status_codes: List[int], log_responses: bool = False):
+    def decorator(func: Callable[[P], Awaitable[httpx.Response]]) -> Callable[[P], Awaitable[dict]]:
         @functools.wraps(func)
-        def wrapper(*args: P.args, **kwargs: P.kwargs) -> dict:
-            response: requests.Response = func(*args, **kwargs)
+        async def wrapper(*args: P.args, **kwargs: P.kwargs) -> dict:
+            response: httpx.Response = await func(*args, **kwargs)
             validate_response(response, expected_status_codes=expected_status_codes, log_responses=log_responses)
-            if wait_time > 0:
-                time.sleep(wait_time)
             return response.json()
 
         return wrapper

@@ -1,9 +1,10 @@
-import requests
+import httpx
 from python.core.http import http_request, StatusCodes
 from python.config.api import YouTubeAPIConfig
 from python.core.exception import ValidationError
 
 MIN_POSITIVE_VALUE = 1
+client = httpx.AsyncClient()
 config = YouTubeAPIConfig()
 
 
@@ -19,5 +20,5 @@ def get_playlist_query_params(api_key: str, playlist_id: str, max_results: int =
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
-def request_playlist_page(query_params: dict):
-    return requests.get(config.playlist_items_url, params=query_params)
+async def request_playlist_page(query_params: dict):
+    return await client.get(config.playlist_items_url, params=query_params)

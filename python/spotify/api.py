@@ -1,4 +1,4 @@
-import requests
+import httpx
 import base64
 import webbrowser
 import urllib.parse
@@ -8,6 +8,7 @@ from python.config.api import SpotifyAPIConfig
 from python.core.exception import ValidationError
 
 MIN_POSITIVE_VALUE = 1
+client = httpx.AsyncClient()
 config = SpotifyAPIConfig()
 
 
@@ -46,46 +47,40 @@ def get_request_access_token_data(code: str, redirect_uri: str) -> dict:
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
-def request_access_token(client_id: str, client_secret: str, code: str, redirect_uri: str):
+async def request_access_token(client_id: str, client_secret: str, code: str, redirect_uri: str):
     headers = get_request_access_token_headers(client_id, client_secret)
     form_data = get_request_access_token_data(code, redirect_uri)
-    return requests.post(config.token_url, headers=headers, data=form_data)
+    return await client.post(config.token_url, headers=headers, data=form_data)
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
-def request_user_profile(headers: dict) -> requests.Response:
-    return requests.get(config.user_profile_url, headers=headers)
+async def request_user_profile(headers: dict):
+    return await client.get(config.user_profile_url, headers=headers)
 
 
 @http_request(expected_status_codes=[StatusCodes.CREATED])
-def request_to_create_playlist(user_id: str, name: str, description: str, is_public: bool, headers: dict):
+async def request_to_create_playlist(user_id: str, name: str, description: str, is_public: bool, headers: dict):
     url = config.playlists_url(user_id)
     headers = {"Content-Type": "application/json", **headers}
     json_body = {"name": name, "description": description, "public": is_public}
-    return requests.post(url, headers=headers, json=json_body)
+    return await client.post(url, headers=headers, json=json_body)
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
-def request_to_search_for_track(name: str, limit: int, headers: dict):
+async def request_to_search_for_track(name: str, limit: int, headers: dict):
     query_params = {"q": name, "type": "track", "limit": limit}
-    return requests.get(config.search_url, params=query_params, headers=headers)
+    return await client.get(config.search_url, params=query_params, headers=headers)
 
 
 @http_request(expected_status_codes=[StatusCodes.CREATED])
-def request_to_add_tracks(playlist_id: str, track_uris: List[str], position: int, headers: dict):
+async def request_to_add_tracks(playlist_id: str, track_uris: List[str], position: int, headers: dict):
     validate_track_uris_size(track_uris)
     url = config.tracks_url(playlist_id)
     headers = {"Content-Type": "application/json", **headers}
     json_body = {"uris": track_uris, "position": position}
-    return requests.post(url, headers=headers, json=json_body)
+    return await client.post(url, headers=headers, json=json_body)
 
 
 def authorize_via_browser(client_id: str, redirect_uri: str):
     query_params = get_authorization_query_params(client_id, redirect_uri)
     webbrowser.open(f"{config.authorization_url}?{query_params}")
-
-
-def get_access_token(client_id: str, client_secret: str, code: str, redirect_uri: str) -> str:
-    response = request_access_token(client_id, client_secret, code, redirect_uri)
-    access_token = response["access_token"]
-    return access_token
