@@ -24,10 +24,10 @@ class SpotifyClient:
             response = api.request_to_add_tracks(playlist_id, track_uris, position, self._token.header)
             return response["snapshot_id"]
 
-        logger.warning("Could not find a single track uri for the given track names")
+        logger.warning("Could not find a single Spotify track uri for the given track names")
 
     def _get_track_uris(self, track_names: List[str]):
-        logger.info(f"Starting to search track uris for {len(track_names)} track names...")
+        logger.info(f"Starting to search Spotify track uris for {len(track_names)} track names...")
 
         track_uris = []
         for track_name in track_names:
