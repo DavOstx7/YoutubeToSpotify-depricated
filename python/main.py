@@ -9,12 +9,14 @@ spotify_config = SpotifyUserConfig()
 
 
 def get_spotify_playlist_id(spotify_client: SpotifyClient) -> str:
-    if spotify_config.is_existing_playlist_id_set:
+    if spotify_config.is_existing_playlist_id_set():
         playlist_id = spotify_config.existing_playlist_id
         logger.info(f"Using the pre-existing Spotify playlist id of {playlist_id}")
     else:
         playlist_id = spotify_client.create_playlist(
-            spotify_config.playlist_name, spotify_config.playlist_description, spotify_config.is_public_playlist
+            name=spotify_config.new_playlist_name,
+            description=spotify_config.new_playlist_description,
+            is_public=spotify_config.is_new_playlist_public
         )
         logger.info(f"Using the newly-created Spotify playlist id {playlist_id}")
     return playlist_id

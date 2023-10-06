@@ -8,11 +8,13 @@
   },
   "spotify": {
     "access_token": "?",
-    "playlist": {
+    "new_playlist": {
       "name": "My Playlist",
       "description": "My Playlist Description",
-      "public": false,
-      "existing_id": "?"
+      "public": false
+    },
+    "existing_playlist": {
+      "id": "?"
     }
   }
 }

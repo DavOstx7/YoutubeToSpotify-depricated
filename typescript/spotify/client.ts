@@ -33,7 +33,7 @@ export class SpotifyClient {
         const trackUris = await this.getTrackUris(trackNames);
 
         if(trackUris.length == 0) {
-            logger.warning("Could not find a single track uri for the given track names");
+            logger.warning("Could not find a single Spotify track uri for the given track names");
             return undefined;
         }
 
@@ -44,7 +44,7 @@ export class SpotifyClient {
     }
 
     private async getTrackUris(trackNames: string[]): Promise<string[]> {
-        logger.info(`Starting to search track uris for ${trackNames.length} track names...`);
+        logger.info(`Starting to search Spotify track uris for ${trackNames.length} track names...`);
 
         const trackUris: string[] = [];
         for (const trackName of trackNames) {

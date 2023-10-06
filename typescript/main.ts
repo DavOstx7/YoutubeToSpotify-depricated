@@ -15,12 +15,14 @@ function isConfigValueSet(value: string): boolean {
 async function getSpotifyPlaylistId(spotifyClient: SpotifyClient): Promise<string> {
     let playlistId: string = undefined;
 
-    if (isConfigValueSet(spotifyConfig.playlist.existing_id)) {
-        playlistId = spotifyConfig.playlist.existing_id;
+    if (isConfigValueSet(spotifyConfig.existing_playlist.id)) {
+        playlistId = spotifyConfig.existing_playlist.id;
         logger.info(`Using the pre-existing Spotify playlist id ${playlistId}`);
     } else {
         playlistId = await spotifyClient.createPlaylist(
-            spotifyConfig.playlist.name, spotifyConfig.playlist.description, spotifyConfig.playlist.public
+            spotifyConfig.new_playlist.name, 
+            spotifyConfig.new_playlist.description, 
+            spotifyConfig.new_playlist.public
         );
         logger.info(`Using the newly-created Spotify playlist id ${playlistId}`)
     }
