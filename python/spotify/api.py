@@ -38,7 +38,7 @@ def get_request_access_token_headers(client_id: str, client_secret: str) -> dict
     }
 
 
-def get_request_access_token_data(code: str, redirect_uri: str) -> dict:
+def get_request_access_token_form_body(code: str, redirect_uri: str) -> dict:
     return {
         "grant_type": "authorization_code",
         "code": code,
@@ -49,8 +49,8 @@ def get_request_access_token_data(code: str, redirect_uri: str) -> dict:
 @http_request(expected_status_codes=[StatusCodes.OK])
 async def request_access_token(client_id: str, client_secret: str, code: str, redirect_uri: str):
     headers = get_request_access_token_headers(client_id, client_secret)
-    form_data = get_request_access_token_data(code, redirect_uri)
-    return await client.post(config.token_url, headers=headers, data=form_data)
+    form_body = get_request_access_token_form_body(code, redirect_uri)
+    return await client.post(config.token_url, headers=headers, data=form_body)
 
 
 @http_request(expected_status_codes=[StatusCodes.OK])
